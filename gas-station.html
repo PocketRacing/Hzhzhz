@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KARTAVIY — Gas Station Simulator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#101114;color:white;font-family:Arial,sans-serif}
+header{padding:20px 6%;background:#191a1e;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333}
+.logo{font-size:22px;font-weight:900}
+.logo span{color:#ff8b32}
+a{color:#aaa;text-decoration:none}
+main{max-width:1050px;margin:auto;padding:30px 6%}
+.hero{padding:35px;background:linear-gradient(120deg,#422514,#191719);border-radius:13px}
+.tag{color:#ff9d4b;font-size:12px;letter-spacing:3px}
+h1{font-size:clamp(30px,6vw,48px);margin:15px 0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:22px 0}
+.stat,.card{background:#1b1d22;padding:20px;border:1px solid #34363c;border-radius:10px}
+.stat span{color:#aaa;font-size:12px}
+.stat strong{display:block;font-size:24px;margin-top:10px}
+.section{margin-top:28px}
+.section h2{margin-bottom:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.card p{color:#aaa;font-size:13px;line-height:1.5;margin:10px 0}
+button{padding:12px 18px;background:#ed812d;color:white;border:0;border-radius:7px;font-weight:bold;cursor:pointer}
+button:hover{background:#ff9d4b}
+button:disabled{opacity:.4;cursor:not-allowed}
+.car{font-size:43px;margin-bottom:15px}
+#message{color:#ffae64;margin-top:18px;min-height:22px}
+progress{width:100%;height:12px;margin:12px 0;accent-color:#ed812d}
+footer{text-align:center;color:#777;padding:30px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">KARTA<span>VIY</span></div>
+<a href="index.html">← Главная</a>
+</header>
+
+<main>
+<section class="hero">
+<div class="tag">BUSINESS SIMULATOR</div>
+<h1>⛽ GAS STATION</h1>
+<p style="color:#bbb">Построй прибыльный бизнес. Обслуживай клиентов, заправляй автомобили и расширяй свою АЗС.</p>
+</section>
+
+<section class="stats">
+<div class="stat"><span>Баланс</span><strong id="money">5 000 ₽</strong></div>
+<div class="stat"><span>Прибыль</span><strong id="profit">0 ₽</strong></div>
+<div class="stat"><span>Уровень АЗС</span><strong id="level">1</strong></div>
+<div class="stat"><span>Клиенты</span><strong id="clients">0</strong></div>
+</section>
+
+<section class="section">
+<h2>Клиенты на заправке</h2>
+<div class="grid">
+<div class="card">
+<div class="car">🚗</div>
+<h3>Легковой автомобиль</h3>
+<p>Заказ: 30 литров АИ-95</p>
+<p>Выручка: 1 800 ₽</p>
+<button onclick="serve(1800,30)">Заправить</button>
+</div>
+<div class="card">
+<div class="car">🚙</div>
+<h3>Внедорожник</h3>
+<p>Заказ: 50 литров АИ-95</p>
+<p>Выручка: 3 000 ₽</p>
+<button onclick="serve(3000,50)">Заправить</button>
+</div>
+<div class="card">
+<div class="car">🚚</div>
+<h3>Грузовик</h3>
+<p>Заказ: 80 литров ДТ</p>
+<p>Выручка: 4 000 ₽</p>
+<button onclick="serve(4000,80)">Заправить</button>
+</div>
+</div>
+<p id="message">Ожидаются клиенты.</p>
+</section>
+
+<section class="section">
+<h2>Развитие бизнеса</h2>
+<div class="grid">
+<div class="card">
+<h3>Дополнительная колонка</h3>
+<p>Увеличивает прибыль за обслуживание на 10%.</p>
+<button onclick="upgrade('pump',5000)">Купить за 5 000 ₽</button>
+</div>
+<div class="card">
+<h3>Рекламная кампания</h3>
+<p>Увеличивает доход за заправку на 20%.</p>
+<button onclick="upgrade('ads',8000)">Купить за 8 000 ₽</button>
+</div>
+</div>
+</section>
+
+<section class="section card">
+<h2>Прогресс бизнеса</h2>
+<p style="color:#aaa;margin-top:12px">Опыт до следующего уровня</p>
+<progress id="xpBar" value="0" max="100"></progress>
+<p id="xpText" style="color:#aaa">0 / 100 XP</p>
+</section>
+</main>
+
+<footer>© 2026 KARTAVIY — GAS STATION</footer>
+
+<script>
+const state={
+money:5000,
+profit:0,
+level:1,
+clients:0,
+xp:0,
+pump:false,
+ads:false
+};
+
+function format(value){
+return Math.floor(value).toLocaleString("ru-RU")+" ₽";
+}
+
+function update(){
+document.getElementById("money").textContent=format(state.money);
+document.getElementById("profit").textContent=format(state.profit);
+document.getElementById("level").textContent=state.level;
+document.getElementById("clients").textContent=state.clients;
+document.getElementById("xpBar").value=state.xp;
+document.getElementById("xpText").textContent=state.xp+" / 100 XP";
+}
+
+function serve(revenue,litres){
+const cost=litres*25;
+
+if(state.money<cost){
+document.getElementById("message").textContent="Недостаточно денег на закупку топлива!";
+return;
+}
+
+let income=revenue-cost;
+
+if(state.pump)income*=1.1;
+if(state.ads)income*=1.2;
+
+income=Math.round(income);
+state.money+=income;
+state.profit+=income;
+state.clients++;
+state.xp+=20;
+
+if(state.xp>=100){
+state.xp-=100;
+state.level++;
+document.getElementById("message").textContent=
+"🏆 Новый уровень АЗС: "+state.level;
+}else{
+document.getElementById("message").textContent=
+"Клиент обслужен! Чистая прибыль: "+format(income);
+}
+
+update();
+save();
+}
+
+function upgrade(type,cost){
+if(state[type]){
+document.getElementById("message").textContent="Улучшение уже куплено.";
+return;
+}
+
+if(state.money<cost){
+document.getElementById("message").textContent="Недостаточно денег.";
+return;
+}
+
+state.money-=cost;
+state[type]=true;
+
+document.getElementById("message").textContent="Улучшение успешно приобретено!";
+update();
+save();
+}
+
+function save(){
+localStorage.setItem("kartaviy_gas_station",JSON.stringify(state));
+}
+
+function load(){
+const saved=localStorage.getItem("kartaviy_gas_station");
+if(saved){
+Object.assign(state,JSON.parse(saved));
+}
+update();
+}
+
+load();
+</script>
+</body>
+</html>
