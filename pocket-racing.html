@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b12">
+<title>KARTAVIY — Pocket Racing</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#090b12;color:white;font-family:Arial,sans-serif}
+header{padding:20px 6%;background:#121722;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #263044}
+.logo{font-size:22px;font-weight:900}
+.logo span{color:#36a9ff}
+a{color:#aaa;text-decoration:none}
+main{max-width:1050px;margin:auto;padding:35px 6%}
+.hero{padding:45px 25px;border-radius:15px;background:linear-gradient(120deg,#122d48,#11131b);border:1px solid #23496c}
+.tag{color:#49baff;letter-spacing:3px;font-size:12px}
+h1{font-size:clamp(35px,7vw,60px);margin:20px 0}
+.hero p{color:#aab8c9;line-height:1.6}
+button{background:#168fe0;color:white;border:0;padding:13px 20px;border-radius:7px;font-weight:bold;cursor:pointer}
+button:hover{background:#35aaff}
+.section{margin-top:30px}
+.section h2{margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:15px}
+.card{background:#151b27;border:1px solid #29374c;border-radius:12px;padding:20px}
+.car{height:110px;display:grid;place-items:center;font-size:55px;background:linear-gradient(135deg,#1e2e43,#111722);border-radius:8px;margin-bottom:15px}
+.card p{color:#9aa9bd;font-size:13px;margin:10px 0 18px}
+.card button{width:100%}
+#race{
+display:none;margin-top:25px;padding:25px;
+background:#101a27;border:1px solid #32618a;border-radius:12px
+}
+.track{height:180px;overflow:hidden;position:relative;background:repeating-linear-gradient(0deg,#292c32 0px,#292c32 30px,#393d44 31px,#393d44 33px);border-radius:8px;margin:20px 0}
+.player-car{position:absolute;left:10%;top:70px;font-size:45px;transition:left .2s}
+.bar{height:10px;background:#283548;border-radius:10px;overflow:hidden}
+.bar div{height:100%;width:0;background:#30aaff;transition:width .2s}
+footer{text-align:center;padding:30px;color:#777}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">KARTA<span>VIY</span></div>
+<a href="index.html">← Главная</a>
+</header>
+
+<main>
+<section class="hero">
+<div class="tag">KARTAVIY RACING DIVISION</div>
+<h1>POCKET <span style="color:#38aaff">RACING</span></h1>
+<p>Выбирай автомобиль, выходи на трассу и устанавливай новые рекорды.</p>
+</section>
+
+<section class="section">
+<h2>Выбор автомобиля</h2>
+<div class="grid">
+<div class="card">
+<div class="car">🚗</div>
+<h3>Street Racer</h3>
+<p>Сбалансированный автомобиль для первых гонок.</p>
+<button onclick="selectCar('Street Racer', '🚗')">Выбрать</button>
+</div>
+<div class="card">
+<div class="car">🏎️</div>
+<h3>Supercar</h3>
+<p>Высокая скорость и мощное ускорение.</p>
+<button onclick="selectCar('Supercar', '🏎️')">Выбрать</button>
+</div>
+<div class="card">
+<div class="car">🚙</div>
+<h3>Offroad</h3>
+<p>Уверенное управление и устойчивость.</p>
+<button onclick="selectCar('Offroad', '🚙')">Выбрать</button>
+</div>
+</div>
+</section>
+
+<section class="section">
+<h2>Режимы гонок</h2>
+<div class="grid">
+<div class="card">
+<h3>🏁 Спринт</h3>
+<p>Доберись до финиша за минимальное время.</p>
+<button onclick="startRace()">Играть</button>
+</div>
+<div class="card">
+<h3>⚡ На время</h3>
+<p>Попробуй побить собственный рекорд.</p>
+<button onclick="startRace()">Играть</button>
+</div>
+</div>
+</section>
+
+<section id="race">
+<h2 id="raceTitle">Гонка началась!</h2>
+<div class="track">
+<div class="player-car" id="playerCar">🚗</div>
+</div>
+<p id="raceText">Нажимай кнопку, чтобы ускоряться.</p>
+<div class="bar"><div id="progress"></div></div>
+<button onclick="accelerate()" id="accelerateButton">УСКОРИТЬСЯ</button>
+<p id="result" style="margin-top:15px;color:#45b7ff"></p>
+</section>
+
+<section class="section card">
+<h2>Твой рекорд</h2>
+<p id="record" style="color:#aaa;margin-top:10px">0 метров</p>
+</section>
+</main>
+
+<footer>© 2026 KARTAVIY — POCKET RACING</footer>
+
+<script>
+let selectedCar="Street Racer";
+let selectedIcon="🚗";
+let distance=0;
+let racing=false;
+let record=Number(localStorage.getItem("kartaviy_racing_record")||0);
+
+document.getElementById("record").textContent=record+" метров";
+
+function selectCar(name,icon){
+selectedCar=name;
+selectedIcon=icon;
+alert("Выбран автомобиль: "+name);
+}
+
+function startRace(){
+if(racing)return;
+
+distance=0;
+racing=true;
+
+document.getElementById("race").style.display="block";
+document.getElementById("raceTitle").textContent="Гонка: "+selectedCar;
+document.getElementById("playerCar").textContent=selectedIcon;
+document.getElementById("progress").style.width="0%";
+document.getElementById("result").textContent="";
+document.getElementById("raceText").textContent="Нажимай ускорение!";
+document.getElementById("accelerateButton").disabled=false;
+
+document.getElementById("race").scrollIntoView({behavior:"smooth"});
+}
+
+function accelerate(){
+if(!racing)return;
+
+distance+=Math.floor(Math.random()*13)+7;
+
+if(distance>=100){
+distance=100;
+racing=false;
+
+document.getElementById("result").textContent="🏆 ФИНИШ! Ты победил!";
+document.getElementById("accelerateButton").disabled=true;
+
+if(distance>record){
+record=distance;
+localStorage.setItem("kartaviy_racing_record",record);
+document.getElementById("record").textContent=record+" метров";
+}
+
+return;
+}
+
+document.getElementById("progress").style.width=distance+"%";
+document.getElementById("playerCar").style.left=(10+distance*.7)+"%";
+document.getElementById("raceText").textContent="Пройдено: "+distance+"%";
+}
+</script>
+</body>
+</html>
