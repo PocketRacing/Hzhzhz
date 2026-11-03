@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0b0d">
+<title>KARTAVIY — Game Universe</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#09090b;
+--panel:#141417;
+--panel2:#1c1c21;
+--orange:#ff7518;
+--red:#e34232;
+--text:#fff;
+--muted:#999;
+}
+body{
+background:var(--bg);
+color:var(--text);
+font-family:Arial,sans-serif;
+min-height:100vh;
+}
+header{
+height:72px;
+padding:0 6%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid #26262a;
+background:#101012;
+position:sticky;
+top:0;
+z-index:10;
+}
+.logo{
+font-size:25px;
+font-weight:900;
+letter-spacing:2px;
+}
+.logo span{color:var(--orange)}
+nav{display:flex;gap:24px}
+nav a{
+color:#bbb;
+text-decoration:none;
+font-size:14px;
+}
+nav a:hover{color:var(--orange)}
+button{
+border:0;
+cursor:pointer;
+color:white;
+background:var(--orange);
+padding:12px 20px;
+border-radius:8px;
+font-weight:bold;
+}
+.hero{
+padding:75px 7%;
+min-height:390px;
+display:flex;
+align-items:center;
+background:
+radial-gradient(ellipse at 80% 50%,#6b291c55,transparent 55%),
+linear-gradient(110deg,#171719,#0b0b0d);
+}
+.hero-content{max-width:650px}
+.tag{
+color:var(--orange);
+font-size:12px;
+font-weight:bold;
+letter-spacing:3px;
+}
+h1{
+font-size:clamp(38px,6vw,70px);
+margin:18px 0;
+line-height:1;
+}
+h1 span{color:var(--orange)}
+.hero p{
+color:#aaa;
+line-height:1.7;
+max-width:500px;
+margin-bottom:25px;
+}
+.section{padding:45px 6%}
+.section-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:25px;
+}
+.section-head h2{font-size:25px}
+.section-head span{color:var(--orange)}
+.games{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+}
+.game{
+background:var(--panel);
+border:1px solid #29292e;
+border-radius:12px;
+overflow:hidden;
+transition:.2s;
+}
+.game:hover{
+transform:translateY(-5px);
+border-color:var(--orange);
+}
+.game-art{
+height:145px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:48px;
+background:linear-gradient(135deg,#28201d,#111114);
+}
+.game-info{padding:17px}
+.game-info h3{font-size:17px;margin-bottom:8px}
+.game-info p{
+font-size:12px;
+color:var(--muted);
+line-height:1.5;
+min-height:36px;
+margin-bottom:15px;
+}
+.game-info button{width:100%;background:#29292e}
+.game-info button:hover{background:var(--orange)}
+.status{
+font-size:10px;
+color:#aaa;
+margin-bottom:10px;
+}
+.profile{
+background:var(--panel);
+margin:0 6% 45px;
+padding:25px;
+border-radius:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:20px;
+border:1px solid #29292e;
+}
+.profile p{color:var(--muted);font-size:13px;margin-top:7px}
+footer{
+padding:30px 6%;
+border-top:1px solid #26262a;
+color:#777;
+font-size:12px;
+display:flex;
+justify-content:space-between;
+}
+@media(max-width:650px){
+nav{display:none}
+.hero{padding:55px 6%}
+.profile{align-items:flex-start;flex-direction:column}
+footer{gap:10px;flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">KARTA<span>VIY</span></div>
+<nav>
+<a href="#home">Главная</a>
+<a href="#games">Игры</a>
+<a href="#profile">Профиль</a>
+<a href="#news">Новости</a>
+</nav>
+<button onclick="showLogin()">Войти</button>
+</header>
+
+<main>
+<section class="hero" id="home">
+<div class="hero-content">
+<div class="tag">WELCOME TO KARTAVIY UNIVERSE</div>
+<h1>ТВОЙ МИР.<br><span>ТВОИ ПРАВИЛА.</span></h1>
+<p>
+Добро пожаловать в KARTAVIY — игровую вселенную,
+объединяющую собственные игры, события,
+достижения и развлечения.
+</p>
+<button onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
+Открыть игры →
+</button>
+</div>
+</section>
+
+<section class="section" id="games">
+<div class="section-head">
+<h2>Игровая библиотека</h2>
+<span>PROJECTS / 08</span>
+</div>
+<div class="games" id="gameList"></div>
+</section>
+
+<section class="profile" id="profile">
+<div>
+<h2>Мой профиль</h2>
+<p id="profileText">Вы пока не авторизованы</p>
+</div>
+<button onclick="showLogin()">Мой аккаунт</button>
+</section>
+
+<section class="section" id="news">
+<div class="section-head">
+<h2>Новости KARTAVIY</h2>
+<span>UPDATES</span>
+</div>
+<div class="game" style="padding:22px">
+<div class="tag">НОВОЕ НАЧАЛО</div>
+<h3 style="margin:12px 0">Создание игровой вселенной</h3>
+<p style="color:#999;font-size:13px">
+KARTAVIY объединяет все наши игровые проекты
+на одной платформе. Разработка началась.
+</p>
+</div>
+</section>
+</main>
+
+<footer>
+<span>© 2026 KARTAVIY</span>
+<span>GAME UNIVERSE</span>
+</footer>
+
+<script>
+const games=[
+{name:"BLACK RUSSIA RP",desc:"Ролевая жизнь, автомобили и собственная экономика.",icon:"🚘",file:"black-russia.html"},
+{name:"POCKET RACING",desc:"Скорость, гонки и соревнования.",icon:"🏎️",file:"pocket-racing.html"},
+{name:"KARTAVIY HORROR",desc:"Страшные истории и выживание.",icon:"💀",file:"horror.html"},
+{name:"GAS STATION",desc:"Управляй собственной автозаправкой.",icon:"⛽",file:"gas-station.html"},
+{name:"PVZ SIMULATOR",desc:"Собственный пункт выдачи заказов.",icon:"📦",file:"pvz.html"},
+{name:"KARTAVIY CASINO",desc:"Игры на удачу и игровые ставки.",icon:"🎰",file:"casino.html"},
+{name:"MINECRAFT",desc:"Мир Minecraft и сервер MKHost.",icon:"⛏️",file:"minecraft.html"},
+{name:"KARTAVIY EXTRA",desc:"Новые проекты и будущие игры.",icon:"🌌",file:"#"}
+];
+
+const list=document.getElementById("gameList");
+games.forEach(game=>{
+const card=document.createElement("div");
+card.className="game";
+card.innerHTML=`
+<div class="game-art">${game.icon}</div>
+<div class="game-info">
+<div class="status">● KARTAVIY PROJECT</div>
+<h3>${game.name}</h3>
+<p>${game.desc}</p>
+<button onclick="openGame('${game.file}')">Открыть проект →</button>
+</div>`;
+list.appendChild(card);
+});
+
+function openGame(file){
+if(file==="#"){
+alert("Этот проект появится позже.");
+return;
+}
+window.location.href=file;
+}
+
+function showLogin(){
+const name=prompt("Введите игровой никнейм:");
+if(!name)return;
+localStorage.setItem("kartaviy_name",name);
+updateProfile();
+}
+
+function updateProfile(){
+const name=localStorage.getItem("kartaviy_name");
+document.getElementById("profileText").textContent=
+name?"Игрок: "+name:"Вы пока не авторизованы";
+}
+
+updateProfile();
+</script>
+</body>
+</html>
