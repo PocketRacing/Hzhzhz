@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080608">
+<title>KARTAVIY — Horror</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+background:#080608;color:#eee;
+font-family:Arial,sans-serif;
+overflow-x:hidden;
+}
+header{
+padding:20px 6%;display:flex;
+justify-content:space-between;align-items:center;
+background:#100d10;border-bottom:1px solid #352027;
+}
+.logo{font-size:22px;font-weight:900}
+.logo span{color:#c52235}
+a{color:#aaa;text-decoration:none}
+.hero{
+min-height:440px;padding:90px 7%;
+display:flex;align-items:center;
+background:
+linear-gradient(90deg,#090609 15%,#090609aa 65%,transparent),
+radial-gradient(ellipse at 80% 50%,#67101d88,transparent 60%),
+linear-gradient(120deg,#211014,#090609);
+}
+.content{max-width:650px}
+.tag{color:#e33146;letter-spacing:4px;font-size:11px}
+h1{font-size:clamp(40px,8vw,78px);margin:20px 0}
+h1 span{color:#b51f33}
+p{color:#aaa;line-height:1.7}
+button{
+padding:14px 22px;background:#a91e31;
+color:white;border:1px solid #e33a4d;
+border-radius:5px;cursor:pointer;font-weight:bold;
+}
+button:hover{background:#d32640}
+.section{padding:35px 7%}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-top:20px}
+.card{padding:22px;background:#171116;border:1px solid #39232b;border-radius:10px}
+.card p{font-size:13px;margin-top:10px}
+.card button{margin-top:20px;width:100%}
+#game{
+display:none;min-height:400px;
+padding:30px 7%;
+background:radial-gradient(ellipse at center,#310b13,#080608 75%);
+}
+.scene{
+min-height:230px;padding:35px 20px;
+border:1px solid #5b1a29;border-radius:10px;
+background:#110a0e;
+display:flex;flex-direction:column;
+justify-content:center;align-items:center;
+text-align:center;
+}
+.scene h2{font-size:27px;margin-bottom:20px}
+.scene p{max-width:550px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:25px}
+#message{color:#ef4557;margin-top:20px}
+footer{text-align:center;padding:30px;color:#666}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">KARTA<span>VIY</span></div>
+<a href="index.html">← Главная</a>
+</header>
+
+<section class="hero">
+<div class="content">
+<div class="tag">A KARTAVIY HORROR EXPERIENCE</div>
+<h1>DON'T <span>LOOK</span> BACK.</h1>
+<p>
+Ты оказался в месте, которого нет на картах.
+Темнота наблюдает за тобой.
+И иногда она подходит ближе.
+</p>
+<button onclick="showGame()">НАЧАТЬ ИСТОРИЮ</button>
+</div>
+</section>
+
+<section class="section">
+<h2>Выбери сложность</h2>
+<div class="grid">
+<div class="card">
+<h3>🕯️ История</h3>
+<p>Спокойное исследование и знакомство с миром.</p>
+<button onclick="setDifficulty('История')">Выбрать</button>
+</div>
+<div class="card">
+<h3>🌑 Выживание</h3>
+<p>Ограниченные ресурсы и опасные встречи.</p>
+<button onclick="setDifficulty('Выживание')">Выбрать</button>
+</div>
+<div class="card">
+<h3>☠️ Кошмар</h3>
+<p>Максимальная опасность. Ошибок не прощают.</p>
+<button onclick="setDifficulty('Кошмар')">Выбрать</button>
+</div>
+</div>
+</section>
+
+<section id="game">
+<div class="tag">KARTAVIY HORROR / CHAPTER 01</div>
+<div class="scene">
+<h2 id="sceneTitle">Заброшенная дорога</h2>
+<p id="sceneText">
+Ты стоишь посреди лесной дороги.
+Впереди виднеется старый дом.
+Сзади раздаётся сухой треск ветки.
+</p>
+<div class="actions" id="actions">
+<button onclick="choose('Дом')">Подойти к дому</button>
+<button onclick="choose('Лес')">Уйти в лес</button>
+<button onclick="choose('Назад')">Обернуться</button>
+</div>
+<p id="message"></p>
+</div>
+</section>
+
+<footer>© 2026 KARTAVIY — HORROR DIVISION</footer>
+
+<script>
+let difficulty="Выживание";
+let step=0;
+
+const story=[
+{
+title:"Заброшенная дорога",
+text:"Ты стоишь посреди лесной дороги. Впереди старый дом. Сзади кто-то наступает на сухие ветки.",
+choices:["Дом","Лес","Назад"]
+},
+{
+title:"Старый дом",
+text:"Дверь приоткрыта. Изнутри доносится тихое постукивание. На стене свежая надпись: «НЕ ОСТАВАЙСЯ».",
+choices:["Войти","Обойти дом","Позвать"]
+},
+{
+title:"Тёмный коридор",
+text:"Пол скрипит под ногами. В конце коридора стоит высокая неподвижная фигура.",
+choices:["Приблизиться","Спрятаться","Бежать"]
+},
+{
+title:"Оно заметило тебя",
+text:"Фигура медленно поворачивает голову. Свет гаснет. Ты слышишь дыхание совсем рядом.",
+choices:["Не двигаться","Закрыть дверь","Бежать"]
+},
+{
+title:"Конец первой главы",
+text:"Ты выбрался наружу. Но на экране телефона появляется сообщение: «Я всё ещё рядом».",
+choices:["Начать сначала"]
+}
+];
+
+function setDifficulty(value){
+difficulty=value;
+alert("Сложность: "+value);
+}
+
+function showGame(){
+document.getElementById("game").style.display="block";
+document.getElementById("game").scrollIntoView({behavior:"smooth"});
+step=0;
+render();
+}
+
+function render(){
+const scene=story[step];
+
+document.getElementById("sceneTitle").textContent=scene.title;
+document.getElementById("sceneText").textContent=scene.text;
+document.getElementById("message").textContent=
+"Сложность: "+difficulty;
+
+const actions=document.getElementById("actions");
+actions.innerHTML="";
+
+scene.choices.forEach(choice=>{
+const button=document.createElement("button");
+button.textContent=choice;
+button.onclick=()=>choose(choice);
+actions.appendChild(button);
+});
+}
+
+function choose(choice){
+if(step===0 && choice==="Лес"){
+document.getElementById("message").textContent=
+"Ты свернул в лес. Ветки цепляются за одежду. Но дорога осталась позади.";
+step=1;
+}else if(step===0 && choice==="Назад"){
+document.getElementById("sceneText").textContent=
+"На дороге никого нет. Только свежие следы, ведущие к тебе.";
+document.getElementById("message").textContent="Ты слышишь шаг прямо за спиной.";
+return;
+}else{
+step=Math.min(step+1,story.length-1);
+}
+
+render();
+}
+</script>
+</body>
+</html>
